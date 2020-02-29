@@ -1,0 +1,5 @@
+spring:
+  application:
+    name: user-thrift-service
+server:
+  port: 7911

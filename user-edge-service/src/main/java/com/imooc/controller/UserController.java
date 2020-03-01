@@ -5,10 +5,12 @@ import com.imooc.redis.RedisClient;
 import com.imooc.support.Response;
 import com.imooc.thrift.ServiceProvider;
 import com.imooc.thrift.user.UserInfo;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.thrift.TException;
 import org.apache.tomcat.util.buf.HexUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -60,6 +62,63 @@ public class UserController {
         redisClient.set(token, toDTO(userInfo), 3600);
 
         return new Response<>(token);
+    }
+
+    @GetMapping("code")
+    public Response<?> sendVerifyCode(@RequestParam(required = false) String mobile,
+                                   @RequestParam(required = false) String email) throws TException {
+        String message = "Verify code is: ";
+        String code = randomCode("0123456789", 6);
+        boolean result;
+        //1.验证验证码
+        if (StringUtils.isNotBlank(mobile)) {
+            result = serviceProvider.getMessageService().sendMobileMessage(mobile, message + code);
+            redisClient.set(mobile, code);
+        } else if (StringUtils.isNotBlank(email)) {
+            result = serviceProvider.getMessageService().sendEmailMessage(email, message + code);
+            redisClient.set(email, code);
+        } else {
+            return Response.MOBILE_OR_EMAIL_REQUIRED;
+        }
+
+        if (!result) {
+            return Response.SEND_VERIFY_CODE_FAILED;
+        }
+
+        return Response.SUCCESS;
+    }
+
+    @PostMapping("register")
+    public Response<?> register(@RequestParam String username,
+                                      @RequestParam String password,
+                                      @RequestParam(required = false) String mobile,
+                                      @RequestParam(required = false) String email,
+                                      @RequestParam String verifyCode) throws TException {
+        if (StringUtils.isBlank(mobile) && StringUtils.isBlank(email)) {
+            return Response.MOBILE_OR_EMAIL_REQUIRED;
+        }
+
+        //1.验证验证码
+        if (StringUtils.isNotBlank(mobile)) {
+            String code = redisClient.get(mobile);
+            if (!verifyCode.equals(code)) {
+                return Response.VERIFY_CODE_INVALID;
+            }
+
+        } else {
+            String code = redisClient.get(email);
+            if (!verifyCode.equals(code)) {
+                return Response.VERIFY_CODE_INVALID;
+            }
+        }
+        UserInfo userInfo = new UserInfo();
+        userInfo.setUsername(username);
+        userInfo.setPassword(md5(password));
+        userInfo.setMobile(mobile);
+        userInfo.setEmail(email);
+        serviceProvider.getUserService().registerUser(userInfo);
+
+        return Response.SUCCESS;
     }
 
     private Object toDTO(UserInfo userInfo) {

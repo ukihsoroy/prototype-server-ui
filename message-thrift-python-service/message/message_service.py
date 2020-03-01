@@ -36,13 +36,16 @@ class MessageServiceHandler:
             return False
 
 
-
 if __name__ == '__main__':
     handler = MessageServiceHandler()
     processor = MessageService.Processor(handler)
-    transport = TSocket.TServerSocket("localhost", "9090")
-    tfactory = TTransport.TFramedTransportFactory() # 帧传输
-    pfactory = TBinaryProtocol.TBinaryProtocolFactory() # 传输协议，二进制
+    transport = TSocket.TServerSocket("127.0.0.1", "9090")
+
+    # 帧传输
+    tfactory = TTransport.TFramedTransportFactory()
+
+    # 传输协议，二进制
+    pfactory = TBinaryProtocol.TBinaryProtocolFactory()
 
     server = TServer.TSimpleServer(processor, transport, tfactory, pfactory)
     print("python thrift server start.")

@@ -11,7 +11,11 @@ import java.io.Serializable;
  */
 public class Response<T> implements Serializable {
 
+    public static final Response SUCCESS = new Response("0", "success");
     public static final Response USERNAME_PASSWORD_INVALID = new Response("1001", "username or password invalid.");
+    public static final Response MOBILE_OR_EMAIL_REQUIRED = new Response("1002", "mobile or email required.");
+    public static final Response SEND_VERIFY_CODE_FAILED = new Response("1003", "send verify code failed.");
+    public static final Response VERIFY_CODE_INVALID = new Response("1004", "verify code invalid.");
 
     private String code;
     private String message;

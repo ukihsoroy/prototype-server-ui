@@ -48,7 +48,8 @@ public class UserServiceImpl implements UserService.Iface {
 
     @Override
     public void registerUser(UserInfo userInfo) throws TException {
-        table.put(userInfo.getId(), userInfo);
+        table.put(table.size() + 1, userInfo);
+        System.out.println("registerUser: " + userInfo.toString());
     }
 
 }

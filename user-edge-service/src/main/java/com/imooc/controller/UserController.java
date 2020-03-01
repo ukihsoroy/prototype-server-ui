@@ -1,19 +1,16 @@
 package com.imooc.controller;
 
-import com.imooc.dto.UserDTO;
 import com.imooc.redis.RedisClient;
 import com.imooc.support.Response;
 import com.imooc.thrift.ServiceProvider;
 import com.imooc.thrift.user.UserInfo;
+import com.imooc.thrift.user.dto.UserDTO;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.thrift.TException;
 import org.apache.tomcat.util.buf.HexUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
@@ -28,6 +25,7 @@ import java.util.Random;
  * @version 1.0 <br>
  */
 @RestController
+@RequestMapping("user")
 public class UserController {
 
     @Autowired
@@ -35,6 +33,11 @@ public class UserController {
 
     @Autowired
     private RedisClient redisClient;
+
+    @GetMapping("login")
+    public String login() {
+        return "login view";
+    }
 
     @PostMapping("login")
     public Response login(@RequestParam String username,
@@ -119,6 +122,11 @@ public class UserController {
         serviceProvider.getUserService().registerUser(userInfo);
 
         return Response.SUCCESS;
+    }
+
+    @PostMapping("authentication")
+    public UserDTO authentication(@RequestHeader String token) {
+        return redisClient.get(token);
     }
 
     private Object toDTO(UserInfo userInfo) {

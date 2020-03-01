@@ -17,6 +17,12 @@ public class Response<T> implements Serializable {
     private String message;
     private T data;
 
+    public Response(T data) {
+        this.code = "0";
+        this.message = "success";
+        this.data = data;
+    }
+
     public Response(String code, String message) {
         this.code = code;
         this.message = message;

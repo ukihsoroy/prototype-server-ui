@@ -35,6 +35,10 @@ public class RedisConfig {
     @Value("${spring.redis.timeout}")
     private Integer timeout;
 
+    @Value("${spring.redis.password}")
+    private String password;
+
+
     @Bean
     public CacheManager cacheManager(RedisTemplate redisTemplate) {
         RedisCacheManager cacheManager = new RedisCacheManager(redisTemplate);
@@ -48,6 +52,7 @@ public class RedisConfig {
         factory.setHostName(host);
         factory.setPort(port);
         factory.setTimeout(timeout);
+        factory.setPassword(password);
         return factory;
     }
 
@@ -60,7 +65,7 @@ public class RedisConfig {
     }
 
     private void setSerializer(StringRedisTemplate template) {
-        Jackson2JsonRedisSerializer jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer(String.class);
+        Jackson2JsonRedisSerializer jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer(Object.class);
         ObjectMapper mapper = new ObjectMapper();
         mapper.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
         mapper.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL);

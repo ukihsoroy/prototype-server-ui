@@ -1,10 +1,13 @@
 package com.imooc.controller;
 
+import com.imooc.dto.UserDTO;
+import com.imooc.redis.RedisClient;
 import com.imooc.support.Response;
 import com.imooc.thrift.ServiceProvider;
 import com.imooc.thrift.user.UserInfo;
 import org.apache.thrift.TException;
 import org.apache.tomcat.util.buf.HexUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -28,9 +31,12 @@ public class UserController {
     @Autowired
     private ServiceProvider serviceProvider;
 
+    @Autowired
+    private RedisClient redisClient;
+
     @PostMapping("login")
     public Response login(@RequestParam String username,
-                      @RequestParam String password) {
+                          @RequestParam String password) {
         //1.验证用户名密码
         UserInfo userInfo = null;
         try {
@@ -43,7 +49,6 @@ public class UserController {
         if (userInfo == null) {
             return Response.USERNAME_PASSWORD_INVALID;
         }
-
         if (!userInfo.getPassword().equalsIgnoreCase(md5(password))) {
             return Response.USERNAME_PASSWORD_INVALID;
         }
@@ -52,8 +57,15 @@ public class UserController {
         String token = getToken();
 
         //3.缓存用户
+        redisClient.set(token, toDTO(userInfo), 3600);
 
-        return null;
+        return new Response<>(token);
+    }
+
+    private Object toDTO(UserInfo userInfo) {
+        UserDTO userDTO = new UserDTO();
+        BeanUtils.copyProperties(userInfo, userDTO);
+        return userDTO;
     }
 
     private String getToken() {

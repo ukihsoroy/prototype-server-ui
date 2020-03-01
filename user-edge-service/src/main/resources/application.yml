@@ -2,8 +2,9 @@ spring:
   application:
     name: user-edge-service
   redis:
-    host: localhost
+    host: 106.12.110.82
     port: 6379
+    password: tiger
     timeout: 30000
 server:
   port: 8082

@@ -97,7 +97,7 @@ public abstract class LoginFilter implements Filter {
             byte[] bytes = new byte[1024];
             StringBuilder builder = new StringBuilder();
             int len = 0;
-            while (inputStream.read(bytes) > 0) {
+            while ((len = inputStream.read(bytes)) > 0) {
                 builder.append(new String(bytes, 0, len));
             }
 

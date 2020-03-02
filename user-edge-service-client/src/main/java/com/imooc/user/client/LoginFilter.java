@@ -70,7 +70,7 @@ public abstract class LoginFilter implements Filter {
         }
 
         if (userDTO == null) {
-            response.sendRedirect("http://127.0.0.1:8082/user/login");
+            response.sendRedirect("http://www.sigma.com/user/login");
         }
 
         login(request, response, userDTO);
@@ -83,7 +83,7 @@ public abstract class LoginFilter implements Filter {
 
     private UserDTO requestUserInfo(String token) {
         //还不是域名
-        String url = "http://127.0.0.1:8082/user/authentication";
+        String url = "http://www.sigma.com/user/authentication";
         HttpClient client = new DefaultHttpClient();
         HttpPost post = new HttpPost(url);
         post.addHeader("token", token);

@@ -3,3 +3,6 @@ spring:
     name: user-thrift-service
 server:
   port: 7911
+
+# 测试docker变量
+test.var: ${test.ko}

@@ -36,3 +36,4 @@ ENTRYPOINT ["java", "-jar", "/user-service.jar"]
 ```
 
 - 构建镜像：`docker build -t user-service:latest` 
+- link docker: `docker-compose up -d`

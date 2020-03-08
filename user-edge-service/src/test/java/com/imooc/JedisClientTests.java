@@ -10,7 +10,7 @@ public class JedisClientTests {
 
     @Before
     public void setup () {
-        jedis = new Jedis("106.12.110.82", 6379);
+        jedis = new Jedis("192.168.1.7", 6379);
         jedis.auth("tiger");
     }
 

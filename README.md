@@ -1,39 +1,27 @@
-# imooc-microservice
+# sigma-admin-ui
 
-- docker与k8s实战：[https://coding.imooc.com/class/198.html](https://coding.imooc.com/class/198.html)
+## 项目涉及的相关文档
 
-## 功能简介
-
-- 用户服务
-  - 用户登录
-  - 用户注册
-  - 用户基本信息查询
-  - 无状态，无session
-  - 单点登录
-- 课程服务
-  - 登录验证
-  - 课程curd
-- 信息服务
-  - 发送邮件
-  - 发送短信
-- 用户edgeservice
-- 课程edgeservice
-- API Gateway
-
-
-```dockerfile
-# 依赖的镜像
-FROM openjdk:8-jre
-
-# 作者以及邮箱等信息
-MAINTAINER K.O ko.shen@hotmail.com
-
-# 从那拷贝到哪里
-COPY target/user-thrift-service-1.0.0.jar /user-service.jar
-
-# 启动命令
-ENTRYPOINT ["java", "-jar", "/user-service.jar"]
+```txt
+Node API          http://nodejs.cn/api/
+Webpack           https://webpack.docschina.org/
+Vue               https://cn.vuejs.org/
+Vue-Cli           https://cli.vuejs.org/zh/
+Vue-Router        https://router.vuejs.org/zh/
+Vue-Loader        https://vue-loader.vuejs.org/zh/
+Vue-Eslint        https://github.com/vuejs/eslint-config-vue
+Sass              https://www.sass.hk/
+Normalize.css     http://necolas.github.io/normalize.css/
+Vuex              https://vuex.vuejs.org/zh/
 ```
 
-- 构建镜像：`docker build -t user-service:latest` 
-- link docker: `docker-compose up -d`
+```shell
+npm install -g serve
+ -s 参数的意思是将其架设在 Single-Page Application 模式下
+ 这个模式会处理即将提到的路由问题
+serve -s dist
+```
+
+- [http://39.105.164.165:1337/sigma/swagger-ui.html](http://39.105.164.165:1337/sigma/swagger-ui.html)
+
+npm run dev -- --DEV_SERVER='sigma'
